@@ -454,5 +454,8 @@
     <Xml Include="x64\Debug\VDCyrano.xml">
       <Filter>debug</Filter>
     </Xml>
+    <Xml Include="x64\Release\VDCyrano.xml">
+      <Filter>release</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
