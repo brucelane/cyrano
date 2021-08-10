@@ -1,0 +1,8 @@
+{
+   "midiin" : {
+      "midiinname" : "nanoKONTROL2 1"
+   },
+   "midiout" : {
+      "midioutname" : "nanoKONTROL2 2"
+   }
+}

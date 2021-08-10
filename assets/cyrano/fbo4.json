@@ -1,0 +1,11 @@
+{
+   "shader" : {
+      "shadername" : "Circles-intersections.glsl",
+      "shadertype" : "fs"
+   },
+   "texture" : {
+      "texturemode" : 0,
+      "texturename" : "5.png",
+      "texturetype" : "image"
+   }
+}

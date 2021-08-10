@@ -1,0 +1,11 @@
+{
+   "shader" : {
+      "shadername" : "DistanceFieldTutorial.glsl",
+      "shadertype" : "fs"
+   },
+   "texture" : {
+      "texturemode" : 0,
+      "texturename" : "4.png",
+      "texturetype" : "image"
+   }
+}

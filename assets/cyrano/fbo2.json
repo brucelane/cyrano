@@ -1,0 +1,11 @@
+{
+   "shader" : {
+      "shadername" : "DeformFlower.glsl",
+      "shadertype" : "fs"
+   },
+   "texture" : {
+      "texturemode" : 0,
+      "texturename" : "3.png",
+      "texturetype" : "image"
+   }
+}
