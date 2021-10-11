@@ -1,6 +1,6 @@
 {
    "shader" : {
-      "shadername" : "dancingpixels.glsl",
+      "shadername" : "debug.glsl",
       "shadertype" : "fs"
    },
    "texture" : {

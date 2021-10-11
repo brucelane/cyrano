@@ -1,6 +1,6 @@
 {
    "shader" : {
-      "shadername" : "DistanceFieldTutorial.glsl",
+      "shadername" : "PinkFloydClock.glsl",
       "shadertype" : "fs"
    },
    "texture" : {

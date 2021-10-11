@@ -17,10 +17,15 @@ uniform float       iWeight5;
 uniform float       iWeight6;
 uniform float       iWeight7;
 uniform float       iWeight8;
-uniform bool		iDebug;
-
+// float? uniform bool		iDebug;
+// doesn't flip uniform float		iFlipV;
 void main() {
 	vec2 uv = gl_FragCoord.xy / iResolution.xy;
+	// flip vertically
+	//if (iDebug)
+	//{
+	//	uv.y = 1.0 - uv.y;
+	//}
 	vec3 c = texture(iChannel0, uv).xyz * iWeight0
 		+ texture(iChannel1, uv).xyz * iWeight1 
 		+ texture(iChannel2, uv).xyz * iWeight2
