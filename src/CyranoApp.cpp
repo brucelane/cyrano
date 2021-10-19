@@ -110,9 +110,9 @@ CyranoApp::CyranoApp() : mSpoutOut("Cyrano", app::getWindowSize())
 	mVDMix = VDMix::create(mVDSettings, mVDAnimation, mVDUniforms);
 	// Session
 	mVDSessionFacade = VDSessionFacade::createVDSession(mVDSettings, mVDAnimation, mVDUniforms, mVDMix)
+		->setUniformValue(mVDUniforms->IBPM, 160.0f)
 		->setupWSClient()
 		->wsConnect()
-		->setUniformValue(mVDUniforms->IBPM, 160.0f)
 		->setUniformValue(mVDUniforms->IMOUSEX, 0.27710f)
 		->setUniformValue(mVDUniforms->IMOUSEY, 0.5648f)
 		->setMode(7)
@@ -122,6 +122,7 @@ CyranoApp::CyranoApp() : mSpoutOut("Cyrano", app::getWindowSize())
 		->getWindowsResolution()
 		->addUIObserver(mVDSettings, mVDUniforms)
 		->toggleUI()
+		->toggleValue(mVDUniforms->IVIGNETTE)
 		->toggleValue(mVDUniforms->IFLIPPOSTV)
 		->toggleValue(mVDUniforms->IFLIPV);
 

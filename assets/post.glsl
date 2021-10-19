@@ -143,9 +143,11 @@ void main() {
 		c = mix( c, vec4( 0.1 ), dot( p, p )*iVignette*3.0 ); 
 	}*/
 	// new vignette
-	vec2 p = 1.0 + -2.0 * uv;
-	p.y *= 1.1;
-	p.x *= 2.0;
-	c -= pow(length(p), 500.0);
+	if (iVignette > 0.0) { 
+		vec2 p = 1.0 + -2.0 * uv;
+		p.y *= 1.1;
+		p.x *= 2.0;
+		c -= pow(length(p), 500.0);
+	}
    	gl_FragColor = c;
 }
