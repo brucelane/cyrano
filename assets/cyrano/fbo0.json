@@ -4,9 +4,8 @@
       "shadertype" : "fs"
    },
    "texture" : {
-      "texturemode" : 0,
-      "texturename" : "0.jpg",
-      "texturetype" : "image",
-      "assetspath" : "intro"
+      "texturemode" : 6,
+      "texturename" : "audio",
+      "texturetype" : "audio"
    }
 }

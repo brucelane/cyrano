@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "assetspath": "cyrano"
+  },
+  "uniforms": {
+    "iExposure": 1.0,
+    "iClear": 0.5
+  }
+ 
+}
