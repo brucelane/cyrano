@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2013-2020, Bruce Lane - All rights reserved.
+ Copyright (c) 2013-2021, Bruce Lane - All rights reserved.
  This code is intended for use with the Cinder C++ library: http://libcinder.org
 
  Using Cinder-Warping from Paul Houx.
@@ -17,27 +17,23 @@
  You should have received a copy of the GNU General Public License
  along with Cinder-Warping.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+ 
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 
- // Animation
+// Animation
 #include "VDAnimation.h"
 // Session Facade
 #include "VDSessionFacade.h"
 // Spout
 #include "CiSpoutOut.h"
-// Video
-//#include "ciWMFVideoPlayer.h"
 // Uniforms
 #include "VDUniforms.h"
 // Params
 #include "VDParams.h"
 // Mix
 #include "VDMix.h"
-// hhtp(s)
-#include "cinder/http/http.hpp"
 
 // UI
 #define IMGUI_DISABLE_OBSOLETE_FUNCTIONS 1
@@ -76,22 +72,10 @@ private:
 	VDParamsRef						mVDParams;
 	// UI
 	VDUIRef							mVDUI;
-	// video
-	/*ciWMFVideoPlayer				mVideo;
-	float							mVideoPos;
-	float							mVideoDuration;
-	bool							mIsVideoLoaded;*/
 
 	bool							mFadeInDelay = true;
 	void							toggleCursorVisibility(bool visible);
 	SpoutOut 						mSpoutOut;
-
-	void makeRequest(http::UrlRef url);
-	std::shared_ptr<ci::http::Session>		session;
-	std::shared_ptr<ci::http::SslSession>	sslSession;
-	ci::gl::TextureRef texture;
-	http::UrlRef							httpsUrl;
-	bool useHttp = false;
 };
 
 
@@ -110,62 +94,23 @@ CyranoApp::CyranoApp() : mSpoutOut("Cyrano", app::getWindowSize())
 	mVDMix = VDMix::create(mVDSettings, mVDAnimation, mVDUniforms);
 	// Session
 	mVDSessionFacade = VDSessionFacade::createVDSession(mVDSettings, mVDAnimation, mVDUniforms, mVDMix)
-		->setUniformValue(mVDUniforms->IBPM, 160.0f)
+		->setUniformValue(mVDUniforms->IDISPLAYMODE, VDDisplayMode::POST)
+		->setupSession()
 		->setupWSClient()
 		->wsConnect()
-		->setUniformValue(mVDUniforms->IMOUSEX, 0.27710f)
-		->setUniformValue(mVDUniforms->IMOUSEY, 0.5648f)
-		->setMode(7)
-		//->addWsObserver("127.0.0.1", 8088)
-		//->setupMidiReceiver()
+		//->setupOSCReceiver()
 		//->addOSCObserver(mVDSettings->mOSCDestinationHost, mVDSettings->mOSCDestinationPort)
-		->getWindowsResolution()
 		->addUIObserver(mVDSettings, mVDUniforms)
-		->setupHttpClient()
-		->loadShaderFromHttp("https://api.sophiaantipolis.xyz/articles/audio-visual", 0)
 		->toggleUI()
-		->toggleValue(mVDUniforms->IVIGNETTE)
-		->toggleValue(mVDUniforms->IFLIPPOSTV)
-		->toggleValue(mVDUniforms->IFLIPV);
+		->setUniformValue(mVDUniforms->IBPM, 160.0f)
+		->setUniformValue(mVDUniforms->IMOUSEX, 0.27710f)
+		->setUniformValue(mVDUniforms->IMOUSEY, 0.5648f);
 
 	// sos only mVDSessionFacade->setUniformValue(mVDSettings->IEXPOSURE, 1.93f);
 	mFadeInDelay = true;
 	// UI
-
+	
 	mVDUI = VDUI::create(mVDSettings, mVDSessionFacade, mVDUniforms);
-	//httpsUrl = std::make_shared<http::Url>("https://upload.wikimedia.org/wikipedia/commons/d/da/Internet2.jpg");
-	httpsUrl = std::make_shared<http::Url>("https://localhost:44377/WeatherForecast");
-
-	makeRequest(httpsUrl);
-}
-
-void CyranoApp::makeRequest(http::UrlRef url)
-{
-	auto request = std::make_shared<http::Request>(http::RequestMethod::GET, url);
-	request->appendHeader(http::Connection(http::Connection::Type::CLOSE));
-	request->appendHeader(http::Accept());
-
-	auto onComplete = [&](asio::error_code ec, http::ResponseRef response) {
-		CI_LOG_W(ci::DataSourceBuffer::create(response->getContent()));
-		//texture = ci::gl::Texture::create(loadImage(ci::DataSourceBuffer::create(response->getContent()),
-			//ImageSource::Options(), ".jpg"));
-	};
-	auto onError = [](asio::error_code ec, const http::UrlRef &url, http::ResponseRef response) {
-		CI_LOG_E(ec.message() << " val: " << ec.value() << " Url: " << url->to_string());
-		if (response) {
-			app::console() << "Headers: " << std::endl;
-			app::console() << response->getHeaders() << endl;
-		}
-	};
-
-	if (url->port() == 80) {
-		session = std::make_shared<http::Session>(request, onComplete, onError);
-		session->start();
-	}
-	else if (url->port() == 443) {
-		sslSession = std::make_shared<http::SslSession>(request, onComplete, onError);
-		sslSession->start();
-	}
 }
 
 void CyranoApp::toggleCursorVisibility(bool visible)
@@ -271,12 +216,7 @@ void CyranoApp::update()
 	}*/
 	mVDSessionFacade->setUniformValue(mVDUniforms->IFPS, getAverageFps());
 	mVDSessionFacade->update();
-	/*mVideo.update();
-	mVideoPos = mVideo.getPosition();
-	if (mVideo.isStopped() || mVideo.isPaused()) {
-		mVideo.setPosition(0.0);
-		mVideo.play();
-	}*/
+
 }
 
 
@@ -297,25 +237,29 @@ void CyranoApp::draw()
 		}
 	}
 	else {
-		gl::setMatricesWindow(mVDParams->getFboWidth(), mVDParams->getFboHeight(), false);
+		gl::setMatricesWindow(mVDParams->getFboWidth(), mVDParams->getFboHeight());
 		//gl::setMatricesWindow(mVDSessionFacade->getIntUniformValueByIndex(mVDSettings->IOUTW), mVDSessionFacade->getIntUniformValueByIndex(mVDSettings->IOUTH), true);
-		// textures needs updating
-		for (unsigned int t = 0; t < mVDSessionFacade->getInputTexturesCount(); t++) {
+		// textures needs updating ?
+		/*for (int t = 0; t < mVDSessionFacade->getInputTexturesCount(); t++) {
 			mVDSessionFacade->getInputTexture(t);
+		}*/
+		int m = mVDSessionFacade->getUniformValue(mVDUniforms->IDISPLAYMODE);
+		if (m == VDDisplayMode::MIXETTE) {
+			gl::draw(mVDSessionFacade->buildRenderedMixetteTexture(0));
+			mSpoutOut.sendTexture(mVDSessionFacade->buildRenderedMixetteTexture(0));
 		}
-		unsigned int m = mVDSessionFacade->getMode();
-		if (m < mVDSessionFacade->getFboShaderListSize()) {
-			gl::draw(mVDSessionFacade->getFboShaderTexture(m));
-			mSpoutOut.sendTexture(mVDSessionFacade->getFboShaderTexture(m));
+		else if (m == VDDisplayMode::POST) {
+			gl::draw(mVDSessionFacade->buildPostFboTexture());
+			mSpoutOut.sendTexture(mVDSessionFacade->buildPostFboTexture());
+		}
+		else if (m == VDDisplayMode::FX) {
+			gl::draw(mVDSessionFacade->buildFxFboTexture());
+			mSpoutOut.sendTexture(mVDSessionFacade->buildFxFboTexture());
 		}
 		else {
-			if (m == 8) {
-				gl::draw(mVDSessionFacade->buildRenderedMixetteTexture(0));
-				mSpoutOut.sendTexture(mVDSessionFacade->buildRenderedMixetteTexture(0));
-			}
-			else if (m == 7) {
-				gl::draw(mVDSessionFacade->buildPostFboTexture());
-				mSpoutOut.sendTexture(mVDSessionFacade->buildPostFboTexture());
+			if (m < mVDSessionFacade->getFboShaderListSize()) {
+				gl::draw(mVDSessionFacade->getFboShaderTexture(m));
+				mSpoutOut.sendTexture(mVDSessionFacade->getFboShaderTexture(m));
 			}
 			else {
 				gl::draw(mVDSessionFacade->buildRenderedMixetteTexture(0), Area(50, 50, mVDParams->getFboWidth() / 2, mVDParams->getFboHeight() / 2));
@@ -323,22 +267,8 @@ void CyranoApp::draw()
 			}
 			//gl::draw(mVDSession->getRenderedMixetteTexture(0), Area(0, 0, mVDSettings->mFboWidth, mVDSettings->mFboHeight));
 			// ok gl::draw(mVDSession->getWarpFboTexture(), Area(0, 0, mVDSettings->mFboWidth, mVDSettings->mFboHeight));//getWindowBounds()
-			//mSpoutOut.sendTexture(mVDSession->getRenderedMixetteTexture(0));
 		}
-		/*vec2 videoSize = vec2(mVideo.getWidth(), mVideo.getHeight());
-		mGlslVideoTexture->uniform("uVideoSize", videoSize);
-		videoSize *= 0.25f;
-		videoSize *= 0.5f;
-		ciWMFVideoPlayer::ScopedVideoTextureBind scopedVideoTex(mVideo, 0);
-		gl::scale(vec3(videoSize, 1.0f));*/
-
-		//gl::draw(mPostFbo->getColorTexture());
-		//gl::draw(mVDSessionFacade->getFboRenderedTexture(0));
-		if (texture)
-			gl::draw(texture, texture->getBounds(), Rectf(vec2(0.0f), vec2(130.0f, 80.0f)));
-
-	}
-
+	}	
 	// imgui
 	if (mVDSessionFacade->showUI()) {
 		mVDUI->Run("UI", (int)getAverageFps());
@@ -351,5 +281,4 @@ void prepareSettings(App::Settings *settings)
 {
 	settings->setWindowSize(1280, 720);
 }
-CINDER_APP(CyranoApp, RendererGl(RendererGl::Options().msaa(8)), prepareSettings)
-
+CINDER_APP(CyranoApp, RendererGl(RendererGl::Options().msaa(8)),  prepareSettings)

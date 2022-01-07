@@ -1,7 +1,7 @@
 {
    "settings" : {
-      "beatsperbar" : 4,
-      "bpm" : 166,
-      "endframe" : 20000000
+      "apiUrl" : "https://api.sophiaantipolis.xyz/articles/",
+      "preferredAudioInput": "Realtek",
+      "preferredMidiInput": "nano"
    }
 }

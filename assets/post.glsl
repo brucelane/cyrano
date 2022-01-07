@@ -24,7 +24,7 @@ vec4 trixels( vec2 inUV, sampler2D tex )
 {
 	// trixels https://www.shadertoy.com/view/4lj3Dm
 	vec4 rtn;
-
+	
     float height = iResolution.x/(1.01 - iTrixels)/90.0;
     float halfHeight = height*0.5;
     float halfBase = height/sqrt(3.0);
@@ -68,6 +68,7 @@ vec4 trixels( vec2 inUV, sampler2D tex )
         {
             vec2 screenPos = vec2(startX+x*halfBase,startY+y*halfHeight);
             vec2 uv1 = screenPos / iResolution.xy;
+			uv1.y = 1.0 - uv1.y;
 			blend += texture2D(tex, uv1);         
         }
     }
@@ -93,7 +94,7 @@ vec4 greyScale( vec4 colored )
 void main() {
 	vec2 uv = gl_FragCoord.xy / iResolution.xy;
 	// zoom centered
-	if ( iZoom < 1.0 )
+	if ( iZoom != 1.0 )
 	{
 	  float xZ = (uv.x - 0.5)*(1.0-iZoom)*2.0;
 	  float yZ = (uv.y - 0.5)*(1.0-iZoom)*2.0;
@@ -101,12 +102,12 @@ void main() {
 	  uv = uv+cZ;
 	}
 	// flip horizontally
-	if (iFlipH > 0.0)
+	/*if (iFlipH > 0.0)
 	{
 		uv.x = 1.0 - uv.x;
-	}
+	}*/
 	// flip vertically
-	if (iFlipV > 0.0)
+	if (iFlipV == 0.0)
 	{
 		uv.y = 1.0 - uv.y;
 	}
@@ -131,7 +132,7 @@ void main() {
 
 	c = t0;c *= iExposure;
 	if (iInvert > 0.0) { c.r = 1.0 - c.r; c.g = 1.0 - c.g; c.b = 1.0 - c.b; }
-	if (iToggle > 0.0) { c.rgb = c.brg; }
+	//if (iToggle > 0.0) { c.rgb = c.brg; }
 	if (iGreyScale > 0.0) { c = greyScale( c ); }
 	c.r *= iRedMultiplier;
 	c.g *= iGreenMultiplier;
