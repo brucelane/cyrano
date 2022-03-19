@@ -174,8 +174,8 @@ vec4 ClockFace(vec2 uv){
     //vec4 iDate = iDate;
     float mils = fract(iDate.w);
 	float secs = mod( (iDate.w),        60.0 );
-	float mins = mod( (iDate.w/60.0),   60.0 );
-	float hors = mod( (iDate.w/3600.0) + 0.0, 24.0 );
+	float mins = 0.0;//mod( (iDate.w/60.0),   60.0 );
+	float hors = 6.0;//mod( (iDate.w/3600.0) + 0.0, 24.0 );
 
 
     vec4 ch1 = Hand(uv, 0.9,0.9, hors  * TAU * .8 );//hours hand
