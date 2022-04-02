@@ -1,6 +1,6 @@
 {
    "shader" : {
-      "shadername" : "Plasmatron4.glsl",
+      "shadername" : "0--interacte.glsl",
       "shadertype" : "fs"
    },
    "texture" : {

@@ -1,6 +1,6 @@
 {
    "shader" : {
-      "shadername" : "DeformFlower.glsl",
+      "shadername" : "1-1-0-spots.glsl",
       "shadertype" : "fs"
    },
    "texture" : {

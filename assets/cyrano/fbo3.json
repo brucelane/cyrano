@@ -1,6 +1,6 @@
 {
    "shader" : {
-      "shadername" : "PinkFloydClock.glsl",
+      "shadername" : "1--1.glsl",
       "shadertype" : "fs"
    },
    "texture" : {

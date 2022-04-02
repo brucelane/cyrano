@@ -1,0 +1,11 @@
+{
+    "shader" : {
+       "shadername" : "inputImage.fs",
+       "shadertype" : "fs"
+    },
+    "texture" : {
+       "texturemode" : 1,
+       "texturename" : "1-7OuvreLaPorte.jpg",
+       "texturetype" : "image"
+    }
+ }

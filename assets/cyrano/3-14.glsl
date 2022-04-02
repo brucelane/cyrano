@@ -5,7 +5,7 @@ void main(void)
    vec2 uv = 2.0 * iZoom * gl_FragCoord.xy/iResolution.xy;
    uv.x -= iRenderXY.x;
    uv.y -= iRenderXY.y;
-float xTime = iTime*0.2;
+   float xTime = iTime*0.2;
    // calculate the centre of the circular sines
    vec2 center = iZoom * vec2((iResolution.x / 2.0) + sin(xTime) * (iResolution.x / 1.5),
                   (iResolution.y / 2.0) + cos(xTime) * (iResolution.y / 1.5));

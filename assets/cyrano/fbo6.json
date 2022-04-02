@@ -1,8 +1,8 @@
 {
-  "shader": {
-    "shadername": "0--interact-2.glsl",
-    "shadertype": "fs"
-  },
+   "shader" : {
+      "shadername" : "1-4-1-money.glsl",
+      "shadertype" : "fs"
+   },
    "texture" : {
       "texturemode" : 6,
       "texturename" : "audio",

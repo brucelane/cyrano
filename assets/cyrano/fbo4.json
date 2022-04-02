@@ -1,6 +1,6 @@
 {
    "shader" : {
-      "shadername" : "Circles-intersections.glsl",
+      "shadername" : "1--2.glsl",
       "shadertype" : "fs"
    },
    "texture" : {
